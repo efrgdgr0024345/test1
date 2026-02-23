@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Draw Studio</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="toolbar" aria-label="Drawing tools">
+      <label>
+        Tool
+        <select id="tool-select" aria-label="Select drawing tool">
+          <option value="brush">Brush</option>
+          <option value="line">Line</option>
+          <option value="rectangle">Rectangle</option>
+          <option value="circle">Circle</option>
+          <option value="eraser">Eraser</option>
+        </select>
+      </label>
+
+      <label>
+        Color
+        <input id="color-picker" type="color" value="#222222" aria-label="Choose color" />
+      </label>
+
+      <label>
+        Size
+        <input id="size-picker" type="range" min="1" max="60" value="5" aria-label="Brush size" />
+      </label>
+
+      <button id="fill-toggle" type="button" aria-pressed="false">Fill Shapes</button>
+      <button id="undo-button" type="button">Undo</button>
+      <button id="redo-button" type="button">Redo</button>
+      <button id="clear-button" type="button">Clear</button>
+      <button id="download-button" type="button">Download PNG</button>
+    </header>
+
+    <main>
+      <canvas id="drawing-canvas" aria-label="Drawing area"></canvas>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
