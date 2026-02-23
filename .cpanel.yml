@@ -2,21 +2,20 @@
 deployment:
   tasks:
     - /bin/bash -lc '
-        set -euxo pipefail
-        DEPLOYPATH="/home/learning/easyai.com.au/github"
-        REPO="/home/learning/repositories/test1"
+        set -e
+        SRC="/home/learning/repositories/test1"
+        DST="/home/learning/easyai.com.au/github"
 
-        mkdir -p "$DEPLOYPATH"
+        mkdir -p "$DST"
 
-        echo "---- DEPLOY START $(date) ----" > "$DEPLOYPATH/DEPLOY_LOG.txt"
-        echo "whoami: $(whoami)" >> "$DEPLOYPATH/DEPLOY_LOG.txt"
-        echo "pwd: $(pwd)" >> "$DEPLOYPATH/DEPLOY_LOG.txt"
-        echo "repo listing:" >> "$DEPLOYPATH/DEPLOY_LOG.txt"
-        ls -la "$REPO" >> "$DEPLOYPATH/DEPLOY_LOG.txt"
+        # wipe destination first (like rsync --delete)
+        rm -rf "$DST"/*
 
-        echo "rsync output:" >> "$DEPLOYPATH/DEPLOY_LOG.txt"
-        /usr/bin/rsync -av --delete --exclude=".git" --exclude=".cpanel.yml" "$REPO"/ "$DEPLOYPATH"/ >> "$DEPLOYPATH/DEPLOY_LOG.txt" 2>&1
+        # copy everything except .git and .cpanel.yml
+        /bin/cp -a "$SRC"/. "$DST"/
+        rm -rf "$DST/.git" 2>/dev/null || true
+        rm -f "$DST/.cpanel.yml" 2>/dev/null || true
 
-        date > "$DEPLOYPATH/DEPLOY_WORKED.txt"
-        ls -la "$DEPLOYPATH" > "$DEPLOYPATH/DEPLOY_LISTING.txt"
+        date > "$DST/DEPLOY_WORKED.txt"
+        ls -la "$DST" > "$DST/DEPLOY_LISTING.txt"
       '
