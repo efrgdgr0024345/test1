@@ -1,7 +1,8 @@
 ---
 deployment:
   tasks:
+    - export REPO=/home/learning/repositories/test1
     - export DEPLOYPATH=/home/learning/easyai.com.au/github
     - /bin/mkdir -p "$DEPLOYPATH"
+    - /usr/bin/rsync -av --delete --exclude='.git' --exclude='.cpanel.yml' "$REPO"/ "$DEPLOYPATH"/
     - /bin/date > "$DEPLOYPATH/DEPLOY_WORKED.txt"
-    - /usr/bin/rsync -av --delete --exclude='.git' --exclude='.cpanel.yml' ./ "$DEPLOYPATH"/
