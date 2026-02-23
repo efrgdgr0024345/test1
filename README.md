@@ -1,14 +1,14 @@
-# Draw Studio
+# Math Training Lab
 
-A lightweight browser-based drawing app with standard sketching tools:
+A lightweight web app for practicing arithmetic while using a scientific calculator.
 
-- Brush and eraser
-- Line, rectangle, and circle tools
-- Color picker and adjustable brush size
-- Fill toggle for shapes
-- Undo/redo
-- Clear canvas
-- Download drawing as PNG
+## Features
+
+- Left-side scientific calculator with functions like `sin`, `cos`, `tan`, `sqrt`, powers, constants, and `Ans`
+- Resizable calculator panel (make it larger/smaller)
+- Minimize/expand calculator panel
+- Full calculation history window showing every expression and result
+- Math training quiz with random arithmetic questions and score tracking
 
 ## Run locally
 
