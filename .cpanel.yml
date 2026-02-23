@@ -1,7 +1,22 @@
 ---
 deployment:
   tasks:
-    - /bin/mkdir -p /home/learning/easyai.com.au/github
-    - /usr/bin/rsync -av --delete --exclude='.git' --exclude='.cpanel.yml' /home/learning/repositories/test1/ /home/learning/easyai.com.au/github/
-    - /bin/date > /home/learning/easyai.com.au/github/DEPLOY_WORKED.txt
-    - /bin/ls -la /home/learning/easyai.com.au/github/ > /home/learning/easyai.com.au/github/DEPLOY_LISTING.txt
+    - /bin/bash -lc '
+        set -euxo pipefail
+        DEPLOYPATH="/home/learning/easyai.com.au/github"
+        REPO="/home/learning/repositories/test1"
+
+        mkdir -p "$DEPLOYPATH"
+
+        echo "---- DEPLOY START $(date) ----" > "$DEPLOYPATH/DEPLOY_LOG.txt"
+        echo "whoami: $(whoami)" >> "$DEPLOYPATH/DEPLOY_LOG.txt"
+        echo "pwd: $(pwd)" >> "$DEPLOYPATH/DEPLOY_LOG.txt"
+        echo "repo listing:" >> "$DEPLOYPATH/DEPLOY_LOG.txt"
+        ls -la "$REPO" >> "$DEPLOYPATH/DEPLOY_LOG.txt"
+
+        echo "rsync output:" >> "$DEPLOYPATH/DEPLOY_LOG.txt"
+        /usr/bin/rsync -av --delete --exclude=".git" --exclude=".cpanel.yml" "$REPO"/ "$DEPLOYPATH"/ >> "$DEPLOYPATH/DEPLOY_LOG.txt" 2>&1
+
+        date > "$DEPLOYPATH/DEPLOY_WORKED.txt"
+        ls -la "$DEPLOYPATH" > "$DEPLOYPATH/DEPLOY_LISTING.txt"
+      '
