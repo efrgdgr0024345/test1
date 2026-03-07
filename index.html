@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Math Training Lab</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Math Training Lab</h1>
+      <p>Practice quick math while using a scientific calculator with full history.</p>
+    </header>
+
+    <main class="app-layout">
+      <section class="calculator-panel" id="calculator-panel" aria-label="Scientific calculator">
+        <div class="panel-header">
+          <h2>Scientific Calculator</h2>
+          <div class="panel-actions">
+            <label for="panel-size">Size</label>
+            <input id="panel-size" type="range" min="260" max="560" value="360" />
+            <button id="minimize-button" type="button" aria-expanded="true">Minimize</button>
+          </div>
+        </div>
+
+        <div class="calculator-shell" id="calculator-shell">
+          <div class="display-wrap">
+            <input id="calc-display" type="text" aria-label="Calculator display" readonly value="0" />
+          </div>
+
+          <div class="calc-grid" id="calc-grid" aria-label="Calculator keys">
+            <button data-action="clear">AC</button>
+            <button data-action="delete">DEL</button>
+            <button data-value="(">(</button>
+            <button data-value=")">)</button>
+
+            <button data-value="sin(">sin</button>
+            <button data-value="cos(">cos</button>
+            <button data-value="tan(">tan</button>
+            <button data-value="sqrt(">√</button>
+
+            <button data-value="7">7</button>
+            <button data-value="8">8</button>
+            <button data-value="9">9</button>
+            <button data-value="/">÷</button>
+
+            <button data-value="4">4</button>
+            <button data-value="5">5</button>
+            <button data-value="6">6</button>
+            <button data-value="*">×</button>
+
+            <button data-value="1">1</button>
+            <button data-value="2">2</button>
+            <button data-value="3">3</button>
+            <button data-value="-">−</button>
+
+            <button data-value="0">0</button>
+            <button data-value=".">.</button>
+            <button data-value="^">xʸ</button>
+            <button data-value="+">+</button>
+
+            <button data-value="pi">π</button>
+            <button data-value="e">e</button>
+            <button data-action="ans">Ans</button>
+            <button class="equals" data-action="evaluate">=</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Math training workspace">
+        <article class="card trainer-card">
+          <h2>Math Training</h2>
+          <p id="question-text">Press "New Question" to start.</p>
+          <div class="trainer-controls">
+            <input id="answer-input" type="number" step="any" placeholder="Your answer" />
+            <button id="check-answer" type="button">Check</button>
+            <button id="new-question" type="button">New Question</button>
+          </div>
+          <p id="feedback-text" aria-live="polite"></p>
+          <p id="score-text">Score: 0 correct, 0 attempted</p>
+        </article>
+
+        <article class="card history-card">
+          <div class="history-header">
+            <h2>Calculation History</h2>
+            <button id="clear-history" type="button">Clear History</button>
+          </div>
+          <ul id="history-list" aria-live="polite"></ul>
+        </article>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

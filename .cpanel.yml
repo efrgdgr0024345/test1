@@ -1,0 +1,21 @@
+---
+deployment:
+  tasks:
+    - /bin/bash -lc '
+        set -e
+        SRC="/home/learning/repositories/test1"
+        DST="/home/learning/easyai.com.au/github"
+
+        mkdir -p "$DST"
+
+        # wipe destination first (like rsync --delete)
+        rm -rf "$DST"/*
+
+        # copy everything except .git and .cpanel.yml
+        /bin/cp -a "$SRC"/. "$DST"/
+        rm -rf "$DST/.git" 2>/dev/null || true
+        rm -f "$DST/.cpanel.yml" 2>/dev/null || true
+
+        date > "$DST/DEPLOY_WORKED.txt"
+        ls -la "$DST" > "$DST/DEPLOY_LISTING.txt"
+      '
