@@ -9,7 +9,7 @@
   <body>
     <header class="app-header">
       <h1>Math Training Lab</h1>
-      <p>Train arithmetic with a full scientific calculator, precision controls, and detailed history.</p>
+      <p>Scientific calculator rebuilt with a proper keypad, live expression display, and calculation history.</p>
     </header>
 
     <main class="app-layout">
@@ -18,73 +18,69 @@
           <h2>Scientific Calculator</h2>
           <div class="panel-actions">
             <label for="panel-size">Size</label>
-            <input id="panel-size" type="range" min="300" max="680" value="460" />
+            <input id="panel-size" type="range" min="320" max="640" value="430" />
             <button id="minimize-button" type="button" aria-expanded="true">Minimize</button>
           </div>
         </div>
 
-        <div class="calculator-shell" id="calculator-shell">
-          <div class="calc-status-row">
-            <span id="angle-mode-indicator">Mode: DEG</span>
-            <span id="memory-indicator">Memory: 0</span>
-          </div>
-          <div class="display-wrap">
-            <label class="sr-only" for="calc-display">Calculator display</label>
-            <input id="calc-display" type="text" aria-label="Calculator display" readonly value="0" />
+        <div class="calculator-shell">
+          <div class="status-row">
+            <span id="mode-indicator">Mode: DEG</span>
+            <span id="memory-indicator">M: 0</span>
           </div>
 
-          <div class="calc-grid" id="calc-grid" aria-label="Calculator keys">
-            <button data-action="clear">AC</button>
+          <div class="display-wrap">
+            <div id="expression-display" class="expression-display" aria-live="polite">0</div>
+            <div id="result-display" class="result-display" aria-live="polite">0</div>
+          </div>
+
+          <div class="keypad" id="keypad" aria-label="Calculator keypad">
+            <button data-action="all-clear">AC</button>
             <button data-action="delete">DEL</button>
-            <button data-action="toggle-sign">±</button>
+            <button data-action="mode">DEG</button>
             <button data-action="percent">%</button>
             <button data-action="memory-clear">MC</button>
             <button data-action="memory-recall">MR</button>
 
             <button data-action="memory-add">M+</button>
             <button data-action="memory-subtract">M-</button>
-            <button data-action="ans">Ans</button>
-            <button data-action="mode-toggle">DEG/RAD</button>
             <button data-token="(">(</button>
             <button data-token=")">)</button>
+            <button data-token="^">xʸ</button>
+            <button data-action="sqrt">√</button>
 
-            <button data-token="sin(">sin</button>
-            <button data-token="cos(">cos</button>
-            <button data-token="tan(">tan</button>
-            <button data-token="asin(">asin</button>
-            <button data-token="acos(">acos</button>
-            <button data-token="atan(">atan</button>
-
-            <button data-token="ln(">ln</button>
-            <button data-token="log(">log</button>
-            <button data-token="sqrt(">√</button>
-            <button data-token="abs(">abs</button>
+            <button data-action="sin">sin</button>
+            <button data-action="cos">cos</button>
+            <button data-action="tan">tan</button>
+            <button data-action="ln">ln</button>
+            <button data-action="log">log</button>
             <button data-token="pi">π</button>
-            <button data-token="e">e</button>
 
             <button data-token="7">7</button>
             <button data-token="8">8</button>
             <button data-token="9">9</button>
             <button data-token="/">÷</button>
-            <button data-token="^">xʸ</button>
             <button data-action="square">x²</button>
+            <button data-action="inverse">1/x</button>
 
             <button data-token="4">4</button>
             <button data-token="5">5</button>
             <button data-token="6">6</button>
             <button data-token="*">×</button>
-            <button data-action="inverse">1/x</button>
-            <button data-action="factorial">x!</button>
+            <button data-token="e">e</button>
+            <button data-action="ans">Ans</button>
 
             <button data-token="1">1</button>
             <button data-token="2">2</button>
             <button data-token="3">3</button>
             <button data-token="-">−</button>
-            <button data-token=".">.</button>
-            <button data-action="evaluate" class="equals">=</button>
+            <button data-action="sign">±</button>
+            <button data-action="factorial">x!</button>
 
             <button data-token="0" class="span-two">0</button>
+            <button data-token=".">.</button>
             <button data-token="+">+</button>
+            <button class="equals" data-action="evaluate">=</button>
           </div>
         </div>
       </section>

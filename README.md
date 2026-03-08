@@ -1,19 +1,17 @@
 # Math Training Lab
 
-A browser-based math practice app with an advanced scientific calculator and training workspace.
+A browser-based math practice app with a rebuilt scientific calculator and training workspace.
 
 ## Features
 
-- High-function scientific calculator with:
-  - Trigonometric and inverse trig functions (`sin`, `cos`, `tan`, `asin`, `acos`, `atan`)
-  - Logs and roots (`ln`, `log`, `sqrt`, `abs`)
-  - Powers and post-fix operations (`x^y`, `x²`, `x!`, `%`, `1/x`, `±`)
-  - Constants and stored values (`π`, `e`, `Ans`)
-  - Memory controls (`MC`, `MR`, `M+`, `M-`)
-  - Degree/Radian mode toggle for trig calculations
-- Expression parser based on tokenization + RPN evaluation (no direct `eval`)
-- Resizable + minimizable calculator panel on the left side
-- Timestamped calculation history with mode context
+- Completely rebuilt scientific calculator with a proper clickable number pad and operator grid
+- Two-line display (expression + evaluated result)
+- Degree/Radian toggle for trig operations
+- Scientific keys: `sin`, `cos`, `tan`, `ln`, `log`, `√`, `x²`, `xʸ`, `1/x`, `%`, `±`, `π`, `e`, `Ans`, `x!`
+- Memory workflow: `MC`, `MR`, `M+`, `M-`
+- Keyboard support for numbers/operators + Enter/Escape/Backspace
+- Timestamped calculation history
+- Resizable and minimizable calculator panel on the left
 - Math training quiz with random arithmetic questions and score tracking
 
 ## Run locally
