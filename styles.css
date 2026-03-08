@@ -1,0 +1,230 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #f4f6fb;
+  color: #111827;
+}
+
+.app-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #d7ddea;
+  background: #ffffff;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.app-header p {
+  margin: 0.25rem 0 0;
+  color: #4b5563;
+}
+
+.app-layout {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  min-height: calc(100vh - 90px);
+}
+
+.calculator-panel {
+  width: 460px;
+  min-width: 300px;
+  max-width: 680px;
+  transition: width 0.2s ease;
+}
+
+.calculator-panel.minimized {
+  width: 190px;
+}
+
+.panel-header,
+.calculator-shell,
+.card {
+  background: #fff;
+  border: 1px solid #d7ddea;
+  border-radius: 0.8rem;
+}
+
+.panel-header {
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.panel-actions {
+  margin-top: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.panel-actions input[type='range'] {
+  flex: 1;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  border: 1px solid #c6d0e3;
+  background: #fff;
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.65rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #eef3ff;
+}
+
+.calculator-shell {
+  padding: 0.8rem;
+}
+
+.calculator-panel.minimized .calculator-shell {
+  display: none;
+}
+
+.calc-status-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.84rem;
+  color: #4b5563;
+}
+
+.display-wrap {
+  margin-bottom: 0.75rem;
+}
+
+#calc-display {
+  width: 100%;
+  border: 1px solid #c9d3e8;
+  border-radius: 0.55rem;
+  font-size: 1.24rem;
+  text-align: right;
+  padding: 0.62rem;
+  background: #f8faff;
+}
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.4rem;
+}
+
+.calc-grid button {
+  padding: 0.5rem;
+  font-size: 0.92rem;
+}
+
+.calc-grid .span-two {
+  grid-column: span 2;
+}
+
+.equals {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+.workspace {
+  flex: 1;
+  display: grid;
+  gap: 1rem;
+  grid-template-rows: auto 1fr;
+}
+
+.card {
+  padding: 1rem;
+}
+
+.trainer-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+#answer-input {
+  border: 1px solid #c6d0e3;
+  border-radius: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  min-width: 180px;
+}
+
+#feedback-text {
+  min-height: 1.4rem;
+  font-weight: 600;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#history-list {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  max-height: 460px;
+  overflow-y: auto;
+  display: grid;
+  gap: 0.45rem;
+}
+
+#history-list li {
+  border: 1px solid #dee5f3;
+  border-radius: 0.55rem;
+  padding: 0.45rem 0.6rem;
+  background: #f8faff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.86rem;
+}
+
+.history-time {
+  color: #6b7280;
+  margin-bottom: 0.2rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+@media (max-width: 1120px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .calculator-panel,
+  .calculator-panel.minimized {
+    width: 100%;
+    max-width: none;
+  }
+}
