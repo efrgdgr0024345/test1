@@ -1,0 +1,180 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #f4f6fb;
+  color: #0f172a;
+}
+
+.app-header {
+  background: #fff;
+  border-bottom: 1px solid #d7ddea;
+  padding: 1rem 1.25rem;
+}
+
+.app-header h1 { margin: 0; font-size: 1.4rem; }
+.app-header p { margin: 0.3rem 0 0; color: #475569; }
+
+.app-layout {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  min-height: calc(100vh - 96px);
+}
+
+.calculator-panel {
+  width: 430px;
+  min-width: 320px;
+  max-width: 640px;
+}
+
+.calculator-panel.minimized { width: 190px; }
+
+.panel-header,
+.calculator-shell,
+.card {
+  background: #fff;
+  border: 1px solid #d7ddea;
+  border-radius: 0.8rem;
+}
+
+.panel-header { padding: 0.75rem; margin-bottom: 0.75rem; }
+.panel-header h2 { margin: 0; font-size: 1rem; }
+
+.panel-actions {
+  margin-top: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.panel-actions input[type='range'] { flex: 1; }
+
+button, input { font: inherit; }
+
+button {
+  border: 1px solid #c6d0e3;
+  background: #fff;
+  border-radius: 0.5rem;
+  padding: 0.42rem 0.65rem;
+  cursor: pointer;
+}
+
+button:hover { background: #eef3ff; }
+
+.calculator-shell { padding: 0.8rem; }
+.calculator-panel.minimized .calculator-shell { display: none; }
+
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  color: #475569;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.display-wrap {
+  border: 1px solid #c9d3e8;
+  background: #f8faff;
+  border-radius: 0.6rem;
+  padding: 0.55rem;
+  margin-bottom: 0.75rem;
+}
+
+.expression-display {
+  min-height: 1.2rem;
+  font-size: 0.92rem;
+  color: #475569;
+  text-align: right;
+  word-break: break-all;
+}
+
+.result-display {
+  min-height: 2rem;
+  text-align: right;
+  font-size: 1.5rem;
+  font-weight: 650;
+  color: #0f172a;
+  word-break: break-all;
+}
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.4rem;
+}
+
+.keypad button {
+  padding: 0.56rem 0.2rem;
+  font-size: 0.92rem;
+}
+
+.keypad .span-two { grid-column: span 2; }
+.equals { background: #2563eb; color: #fff; border-color: #2563eb; }
+
+.workspace {
+  flex: 1;
+  display: grid;
+  gap: 1rem;
+  grid-template-rows: auto 1fr;
+}
+
+.card { padding: 1rem; }
+
+.trainer-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+#answer-input {
+  border: 1px solid #c6d0e3;
+  border-radius: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  min-width: 180px;
+}
+
+#feedback-text { min-height: 1.4rem; font-weight: 600; }
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#history-list {
+  list-style: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  max-height: 480px;
+  overflow-y: auto;
+  display: grid;
+  gap: 0.45rem;
+}
+
+#history-list li {
+  border: 1px solid #dee5f3;
+  border-radius: 0.55rem;
+  background: #f8faff;
+  padding: 0.45rem 0.6rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.86rem;
+}
+
+.history-meta { color: #64748b; margin-bottom: 0.18rem; }
+
+@media (max-width: 1120px) {
+  .app-layout { flex-direction: column; }
+  .calculator-panel,
+  .calculator-panel.minimized {
+    width: 100%;
+    max-width: none;
+  }
+}
