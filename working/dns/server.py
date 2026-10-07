@@ -31,6 +31,7 @@ from collections import OrderedDict
 from urllib.parse import parse_qs, urlsplit
 
 import dns.edns
+import dns.exception
 import dns.flags
 import dns.message
 import dns.name
