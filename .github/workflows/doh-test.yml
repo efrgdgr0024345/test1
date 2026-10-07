@@ -1,0 +1,20 @@
+name: Black Cat DoH tests
+on:
+  push:
+    branches: [black-cat-doh]
+  pull_request:
+    paths:
+      - "working/dns/**"
+      - ".devcontainer/**"
+      - ".github/workflows/doh-test.yml"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -r working/dns/requirements.txt
+      - run: python -m py_compile working/dns/server.py working/dns/edge_server.py working/dns/smoke.py working/dns/tests.py
+      - run: cd working/dns && python tests.py
