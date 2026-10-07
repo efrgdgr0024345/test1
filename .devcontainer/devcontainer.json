@@ -1,0 +1,9 @@
+{
+  "name": "Black Cat HTTPS-only DNS consensus lab",
+  "image": "mcr.microsoft.com/devcontainers/python:3.13-bookworm",
+  "forwardPorts": [8443],
+  "portsAttributes": {"8443": {"label": "Black Cat TLS-only DoH", "protocol": "https", "onAutoForward": "notify"}},
+  "postCreateCommand": "bash working/dns/setup.sh",
+  "postStartCommand": "bash working/dns/start.sh",
+  "remoteUser": "vscode"
+}
