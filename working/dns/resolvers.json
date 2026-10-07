@@ -1,0 +1,5 @@
+[
+  {"name":"UncensoredDNS", "url":"https://unicast.uncensoreddns.org/dns-query", "ip":"89.233.43.71", "location":"Copenhagen, Denmark (operator published)"},
+  {"name":"dnsforge Blank", "url":"https://blank.dnsforge.de/dns-query", "ip":"138.199.149.249", "location":"Germany (operator published)"},
+  {"name":"Digitale Gesellschaft", "url":"https://dns.digitale-gesellschaft.ch/dns-query", "ip":"185.95.218.42", "location":"Switzerland (operator published)"}
+]

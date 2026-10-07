@@ -1,0 +1,14 @@
+{
+  "name": "Black Cat HTTPS-only DNS consensus lab",
+  "image": "mcr.microsoft.com/devcontainers/python:3.13-bookworm",
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": {
+      "label": "Black Cat public HTTPS edge / loopback HTTP backend",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "bash working/dns/setup.sh",
+  "postStartCommand": "bash working/dns/start.sh",
+  "remoteUser": "vscode"
+}
