@@ -7,6 +7,7 @@ on:
       - "working/dns/**"
       - ".devcontainer/**"
       - ".github/workflows/doh-test.yml"
+  workflow_dispatch:
 jobs:
   test:
     runs-on: ubuntu-latest
