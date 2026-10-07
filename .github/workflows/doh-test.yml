@@ -1,21 +1,51 @@
 name: Black Cat DoH tests
 on:
   push:
-    branches: [black-cat-doh]
+    branches: [main, black-cat-doh]
+    paths:
+      - "working/dns/**"
+      - ".devcontainer/**"
+      - ".github/workflows/doh-test.yml"
   pull_request:
     paths:
       - "working/dns/**"
       - ".devcontainer/**"
       - ".github/workflows/doh-test.yml"
   workflow_dispatch:
+permissions:
+  contents: read
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
       - run: python -m pip install -r working/dns/requirements.txt
-      - run: python -m py_compile working/dns/server.py working/dns/edge_server.py working/dns/smoke.py working/dns/tests.py
-      - run: cd working/dns && python tests.py
+      - name: Python and shell syntax
+        run: |
+          python -m compileall -q working/dns
+          for script in working/dns/*.sh; do bash -n "$script"; done
+      - name: Consensus policy regression tests
+        run: cd working/dns && python tests.py
+      - name: Deployment verification regression tests
+        run: cd working/dns && python test_deployment.py
+      - name: Live encrypted upstream consensus probe (not a public deployment)
+        run: |
+          cd working/dns
+          timeout 60 python - <<'PY'
+          import json
+          from server import Engine, Provider, public
+          providers = [Provider.load(r) for r in json.load(open('resolvers.json'))]
+          engine = Engine(providers, 60)
+          try:
+              report = engine.gate('unicast.uncensoreddns.org.')
+              print(json.dumps(public(report), indent=2))
+              assert report['status'] == 'match' and report['allowed'], 'Live upstream consensus failed'
+          finally:
+              engine.close()
+          PY

@@ -1,6 +1,7 @@
 {
   "name": "Black Cat HTTPS-only DNS consensus lab",
   "image": "mcr.microsoft.com/devcontainers/python:3.13-bookworm",
+  "features": {"ghcr.io/devcontainers/features/github-cli:1.1.0": {}},
   "forwardPorts": [8080],
   "portsAttributes": {
     "8080": {
@@ -9,6 +10,6 @@
     }
   },
   "postCreateCommand": "bash working/dns/setup.sh",
-  "postStartCommand": "bash working/dns/start.sh",
+  "postStartCommand": "bash working/dns/launch.sh",
   "remoteUser": "vscode"
 }

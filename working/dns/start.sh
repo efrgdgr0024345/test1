@@ -18,8 +18,7 @@ nohup .venv/bin/python edge_server.py --public-origin "$ORIGIN" --port 8080 --li
 echo $! > .runtime/pid
 for _ in {1..50}; do
   if curl -fsS --max-time 1 http://127.0.0.1:8080/healthz >/dev/null; then
-    echo "Private loopback service started."
-    echo "Now run: bash working/dns/make-public.sh"
+    echo "Private loopback service started. Public deployment is not verified yet."
     exit 0
   fi
   sleep .2
