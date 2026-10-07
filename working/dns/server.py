@@ -2,8 +2,8 @@
 """Temporary, fail-closed, HTTPS-only multi-resolver DoH experiment.
 
 Only dnspython parses DNS. All resolver connections use a pinned bootstrap IP
-and verified TLS for the configured hostname. No UDP/TCP port 53, HTTP client,
-redirect following, proxy-from-environment, or fabricated redirect IP exists.
+and verified TLS for the configured hostname. No UDP/TCP port 53, plaintext
+upstream, redirect following, proxy-from-environment, or fabricated redirect IP.
 """
 from __future__ import annotations
 import argparse
@@ -14,7 +14,6 @@ import dataclasses
 import datetime as dt
 import hashlib
 import hmac
-import http.client
 import http.server
 import ipaddress
 import json
@@ -38,6 +37,7 @@ import dns.name
 import dns.opcode
 import dns.rcode
 import dns.rdatatype
+from upstream import PinnedHTTPS
 
 ROOT = Path(__file__).resolve().parent
 MAX_WIRE = 65535
@@ -85,21 +85,6 @@ class Provider:
         if not ipaddress.ip_address(p.ip).is_global:
             raise ValueError('Resolver bootstrap addresses must be public IPs')
         return p
-
-
-class PinnedHTTPS(http.client.HTTPSConnection):
-    """Use an IP for the socket, but the original hostname for TLS verification."""
-    def __init__(self, host: str, ip: str, port: int, context: ssl.SSLContext):
-        super().__init__(host, port=port, timeout=4, context=context)
-        self.bootstrap_ip = str(ipaddress.ip_address(ip))
-
-    def connect(self) -> None:
-        sock = socket.create_connection((self.bootstrap_ip, self.port), self.timeout)
-        try:
-            self.sock = self._context.wrap_socket(sock, server_hostname=self.host)
-        except BaseException:
-            sock.close()
-            raise
 
 
 def fingerprint(msg: dns.message.Message) -> str:

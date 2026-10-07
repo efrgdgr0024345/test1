@@ -30,10 +30,8 @@ jobs:
         run: |
           python -m compileall -q working/dns
           for script in working/dns/*.sh; do bash -n "$script"; done
-      - name: Consensus policy regression tests
-        run: cd working/dns && python tests.py
-      - name: Deployment verification regression tests
-        run: cd working/dns && python test_deployment.py
+      - name: Consensus, deployment and HTTP2 security regression tests
+        run: python -m unittest discover -s working/dns -p 'test*.py' -v
       - name: Live encrypted upstream consensus probe (not a public deployment)
         run: |
           cd working/dns
