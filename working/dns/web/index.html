@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Black Cat DNS Consensus</title>
+<link rel="stylesheet" href="@@PREFIX@@/style.css">
+<script defer src="@@PREFIX@@/app.js"></script>
+</head>
+<body data-prefix="@@PREFIX@@">
+<main>
+<header>
+<div class="eyebrow">BLACK CAT / TEMPORARY DNS CONSENSUS</div>
+<h1>Trust less.<br>Compare more.</h1>
+<p>Independent encrypted resolvers are compared before an address is released.</p>
+</header>
+<div class="badges">
+<span>HTTPS public access</span><span>3 independent resolvers</span><span>IPv4 + IPv6</span><span>Fail closed</span>
+</div>
+
+<section class="card">
+<h2>Check a domain</h2>
+<form id="check">
+<label for="domain">Domain name</label>
+<div class="input-row">
+<input id="domain" name="domain" placeholder="example.org" autocomplete="off" required maxlength="253">
+<button id="submit">Compare resolvers</button>
+</div>
+</form>
+<p class="muted">A mismatch can be legitimate: CDNs, regional routing, filtering, and cache timing can all produce different answers.</p>
+</section>
+
+<section id="result" class="card" hidden>
+<div id="status" class="status"></div>
+<h2 id="result-name"></h2>
+<p id="summary"></p>
+<p id="timestamp" class="muted"></p>
+<div id="tables"></div>
+<p id="report-link"></p>
+<details><summary>Raw evidence</summary><pre id="evidence"></pre></details>
+</section>
+
+<section class="card">
+<h2>Temporary DNS-over-HTTPS endpoint</h2>
+<p>Keep this capability URL private. It stops with the temporary session.</p>
+<code id="endpoint"></code>
+<button id="copy" class="secondary">Copy DNS-over-HTTPS URL</button>
+<p class="muted">For automatic browser redirection on a blocked DNS mismatch, load the Firefox helper from <code>working/dns/firefox/</code> and point it at this dashboard.</p>
+</section>
+
+<footer>
+Agreement is evidence of consistency, not proof that an address is safe or authentic. DNSSEC AD is reported by upstream resolvers; this service does not perform an independent full-chain DNSSEC validation.
+</footer>
+</main>
+</body>
+</html>
