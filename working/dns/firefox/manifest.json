@@ -1,0 +1,10 @@
+{
+  "manifest_version": 2,
+  "name": "Black Cat DNS mismatch redirect",
+  "version": "0.1.0",
+  "description": "When the configured DoH resolver fails a main-frame lookup, re-check the hostname through the Black Cat consensus service and show its report if consensus failed.",
+  "permissions": ["tabs", "webRequest", "storage", "<all_urls>"],
+  "background": {"scripts": ["background.js"]},
+  "options_ui": {"page": "options.html", "open_in_tab": true},
+  "browser_specific_settings": {"gecko": {"id": "black-cat-dns@local.invalid"}}
+}
