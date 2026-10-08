@@ -1,5 +1,5 @@
 {
   "operation": "status",
-  "request_id": "initial-not-triggered",
-  "description": "ChatGPT updates operation and request_id to start, stop, restart or check the Black Cat DNS Codespace."
+  "request_id": "preflight-20261008-controller-v2",
+  "description": "Read-only cloud-control preflight requested from ChatGPT. Does not create or restart a Codespace."
 }
