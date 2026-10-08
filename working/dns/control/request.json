@@ -1,5 +1,9 @@
 {
-  "operation": "status",
-  "request_id": "preflight-20261008-controller-v2",
-  "description": "Read-only cloud-control preflight requested from ChatGPT. Does not create or restart a Codespace."
+  "version": 2,
+  "operation": "start",
+  "request_id": "39d5c0818d93c2873fdb1a9eb6928373",
+  "lifetime_seconds": 3600,
+  "issued_at": 1791421894,
+  "valid_until": 1791425494,
+  "reply_public_key": "-----BEGIN PUBLIC KEY-----\nMIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAswSPVo/FMv0V7fL5YDx5\nWzFtXMTlrOLJQCR6EjtLymDWw1oRfYrPZEGnjhK+vAlspt1kaZyElpEw0FE7TtBX\ngdIU0nanKZCIt5ULhKFPz0pDbkGRdwUhe4VXj/7SILyk0lqRzsAJhJYE5WV3iQH9\nXpaDBY1OYKGlEzOW0zRe3tKdU1qIprO0CCj4qOE+/rRVWNlBayTYD5xHpvbUyuly\n4cZKG2xqXeEzklsLn+EJzF1pb3rS2Xw7FWMFOiq5Qws62RX3WY9kSRdsDdxrb1KE\nVRaZwQ+TGD+OF9mzbAbhYtFxqn+Bo/zYm6IjaiENnI+eYggRmgU3vJ2q/UFU7whD\ngmkviMLppoqBR2KYKaO6zsomJHaf3tN8c0dxl5ZWT3wy5nVjdEIdWC8H4ciEU4iI\nx73rbPBGx3HqsLcE5Cx9vdyBlr/kYxE/jPr33ilDo9m7KhwI/rRjYwTJzLuOVfA0\n8VXQ0ZNZY0snPx7I7oyjuo80Vd23dR4oxQFgFeTjMsDvAgMBAAE=\n-----END PUBLIC KEY-----\n"
 }
