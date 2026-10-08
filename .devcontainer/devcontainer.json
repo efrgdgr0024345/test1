@@ -1,15 +1,16 @@
 {
-  "name": "Black Cat HTTPS-only DNS consensus lab",
+  "name": "Black Cat cloud-controlled DNS lab",
   "image": "mcr.microsoft.com/devcontainers/python:3.13-bookworm",
-  "features": {"ghcr.io/devcontainers/features/github-cli:1.1.0": {}},
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1.1.0": {},
+    "ghcr.io/devcontainers/features/sshd:1": {"version": "latest"}
+  },
   "forwardPorts": [8080],
   "portsAttributes": {
-    "8080": {
-      "label": "Black Cat public HTTPS edge / loopback HTTP backend",
-      "onAutoForward": "notify"
-    }
+    "8080": {"label": "Black Cat public HTTPS edge / loopback HTTP backend", "onAutoForward": "notify"}
   },
+  "otherPortsAttributes": {"onAutoForward": "ignore"},
   "postCreateCommand": "bash working/dns/setup.sh",
-  "postStartCommand": "bash working/dns/launch.sh",
+  "postStartCommand": "bash working/dns/control/on-start.sh",
   "remoteUser": "vscode"
 }
