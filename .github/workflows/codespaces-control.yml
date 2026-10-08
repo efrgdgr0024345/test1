@@ -1,0 +1,25 @@
+name: Black Cat DNS Chat Control
+on:
+  push:
+    branches: [main]
+    paths:
+      - "working/dns/control/request.json"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: black-cat-codespaces-control
+  cancel-in-progress: false
+jobs:
+  codespaces:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout project controller
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Start stop or check the GitHub Codespace
+        env:
+          BLACKCAT_CODESPACES_PAT: ${{ secrets.BLACKCAT_CODESPACES_PAT }}
+        run: python3 working/dns/control/controller.py
