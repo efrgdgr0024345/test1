@@ -52,7 +52,12 @@ def main():
         require_stopped_legacy(legacy)
         other = select(candidates(cloud.owned()), command.get('codespace'))
         if other is None:
-            machine = small_machine(cloud.api('GET', '/repos/' + REPO + '/codespaces/machines').get('machines', []))
+            # The authenticated existing-Codespace response includes its machine
+            # name AND CPU count. Reuse that verified small tier; no machine
+            # catalog permission or unverified/larger default is needed.
+            existing_machine = legacy.get('machine') or {}
+            machine = small_machine([existing_machine])
+            note('selected_machine', name=machine, cpus=existing_machine['cpus'])
             deadline = int(time.time()) + command['lifetime_seconds']
             other = cloud.api('POST', '/repos/' + REPO + '/codespaces', {
                 'ref': 'main', 'display_name': TAG + str(deadline), 'machine': machine,
