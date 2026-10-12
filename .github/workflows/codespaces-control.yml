@@ -16,10 +16,10 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Checkout the exact trusted command commit
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4, immutable
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5, immutable
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: "3.13"
       - name: Install controller and verification dependencies without credentials
@@ -29,4 +29,4 @@ jobs:
       - name: Execute command and emit only encrypted session details
         env:
           BLACKCAT_CODESPACES_PAT: ${{ secrets.BLACKCAT_CODESPACES_PAT }}
-        run: python working/dns/control/controller.py
+        run: python working/dns/control/diagnose.py
