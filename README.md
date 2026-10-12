@@ -4,68 +4,50 @@ Repository: https://github.com/efrgdgr0024345/test1
 
 DNS source: https://github.com/efrgdgr0024345/test1/tree/main/working/dns
 
-Cloud controller and current setup guide:
-https://github.com/efrgdgr0024345/test1/tree/main/working/dns/control
+Cloud control guide: https://github.com/efrgdgr0024345/test1/tree/main/working/dns/control
 
-**This repository is source code, not a live DNS URL.** The complete session URL
-is generated at runtime and handed back encrypted to the requesting chat.
+## Verified live deployment — 12 October 2026
 
-## Current cloud-control path
+The first complete public HTTPS deployment passed on **12 October 2026 at 05:26:10 UTC**.
 
-Ask ChatGPT to start DNS for one, two or three hours. It writes a short-lived,
-validated request on `main`; GitHub Actions controls the Codespace, verifies the
-public HTTPS service, and emits an encrypted reply containing the exact app URL.
-ChatGPT decrypts that reply in its cloud runtime. No DNS process runs on your PC.
+Deployment run: https://github.com/efrgdgr0024345/test1/actions/runs/38207855261
 
-The one-time Actions secret is `BLACKCAT_CODESPACES_PAT`:
-https://github.com/efrgdgr0024345/test1/settings/secrets/actions
+Regression and live-upstream test run: https://github.com/efrgdgr0024345/test1/actions/runs/38207855216
 
-The access preflight found this secret missing. Until authorisation and live
-acceptance pass, there is no confirmed working public endpoint from this controller.
-Preflight: https://github.com/efrgdgr0024345/test1/actions/runs/37709946965
+Verified running code: `0690c33d8257bb2c1353b301b738e2c9da4122ca`.
 
-Version-2 source commit: `b9118649b84559edfcb4d35bf33002f1b980a0b4`.
-Passed regression/TLS tests and live upstream probe:
-https://github.com/efrgdgr0024345/test1/actions/runs/37711506059
+This records a successful temporary session, **not a claim that this service is always online**. The actual session URLs and expiry are returned privately to the requesting chat. Never publish the usable capability URL or a private reply key in this repository.
 
-See the controller guide for least-privilege token permissions, SSH prerequisites,
-command fields, encrypted replies, fixed deadlines, and handling an older Codespace.
+The missing-token and old-container SSH blockers are resolved. The original pre-SSH Codespace was preserved stopped, not rebuilt or deleted. A fresh two-core Codespace with the committed SSH feature now runs the service.
 
-## Startup and shutdown behavior
+## Use from ChatGPT
 
-The devcontainer includes GitHub CLI and an SSH-server feature. Its boot hook now
-prepares for CHAT CONTROL; it does not automatically publish a fresh three-hour
-DNS session on every boot. An older Codespace may need a one-time update/rebuild
-for the SSH feature. The controller refuses to overwrite dirty work or delete a
-machine to work around that problem.
+Ask to start DNS for one, two or three hours, check DNS status, stop DNS, or restart DNS. The connected chat submits a validated request on `main`; GitHub Actions controls the Codespace and tests its actual public HTTPS endpoint. The result, including the complete `/working/dns` address, is encrypted to that request's public key and retrieved by the requesting chat.
 
-A repeated start preserves the current live session. A new restart intentionally
-replaces it. Status does not start a stopped machine. Each managed session has an
-absolute deadline; rebooting does not renew it. The process expires on its own.
-A separate scheduled cleanup stops expired managed Codespaces and confirms their
-state. GitHub schedules may run late, so exact compute-stop timing is not promised.
-Stopped machines retain storage and are not automatically deleted by this code.
+The controller and DNS process run in GitHub's cloud. Nothing here requires a DNS process on the user's laptop. The optional Firefox helper runs in the client browser and is separate from server hosting.
 
-## What qualifies as live
+The repository Actions secret is `BLACKCAT_CODESPACES_PAT`. It is configured in GitHub, not in chat or source code. Do not replace or broaden an existing working token unnecessarily.
 
-The real public dashboard must load without login cookies. Certificate verification
-and positive DoH GET/POST tests must pass for IPv4 and IPv6. Every configured
-resolver must be represented and agree. Plain HTTP must be refused or strictly
-redirected to the same HTTPS route; a timeout is not treated as proof. Error DNS
-replies, login pages and empty answers cannot pass positive acceptance.
+## Acceptance evidence
 
-Public HTTPS terminates at GitHub's forwarding edge. The application backend is
-HTTP bound to loopback only; this is not uninterrupted TLS into Python. Upstream
-queries use verified HTTPS/HTTP2 with pinned bootstrap IPs.
+The successful public deployment verified:
 
-Local TLS integration tests exercise disagreement, timeout, invalid certificate,
-plaintext rejection, access tokens and expiry. They are NOT a public Codespace
-deployment. Actual client bootstrap and Firefox redirection still require device
-validation. Clients must support a custom DoH URL and avoid silent DNS fallback.
+- Real dashboard HTML over certificate-validated HTTPS, with no login cookies or GitHub authentication.
+- Positive standard DoH GET and POST for both A and AAAA, using ordinary `application/dns-message` requests and no tunnel-specific headers.
+- Unanimous positive answers from every configured resolver through the public comparison API.
+- Plain HTTP receives HTTP 308 upgrades to the same HTTPS origin. The edge normalizes one trailing slash on the dashboard landing path; DoH path and query remain exact.
+- No actual session capability is sent in plaintext probes. Timeouts, login pages, empty answers, SERVFAIL and NXDOMAIN do not count as successful positive checks.
 
-## Technical notes and manual fallback
+A browser's first visit may display **Codespaces Access Port**, GitHub's forwarding warning. The verifier checks the actual application HTML separately using non-browser content negotiation; the notice alone never passes. Standard DoH GET/POST was tested without notice-bypass headers or cookies.
 
-Resolver policy, dashboard and Firefox files are in `working/dns`. The older
-`working/dns/README.md`, `launch.sh` and `make-public.sh` describe a MANUAL fallback,
-not the normal chat-controlled lifecycle. Prefer the v2 controller guide linked above.
-Keep session URLs and all private keys out of public source, issues and logs.
+Public HTTPS terminates at GitHub's forwarding edge. The application backend is HTTP on `127.0.0.1:8080`; this is not uninterrupted TLS into Python. Upstream queries use verified HTTPS/HTTP2 with pinned bootstrap IPs.
+
+## Policy and lifecycle
+
+All configured resolvers must agree. A disagreement or missing result fails closed. Legitimate geographic/CDN DNS differences can therefore cause blocks. Three resolver operators are compared; this is not a global DNSChecker-style distributed probe network or proof that an IP is safe.
+
+A repeated start preserves the live session and its expiry. A new restart replaces it. Status does not start a stopped machine. Every managed session has an absolute deadline; rebooting does not renew it. DNS stops serving at expiry independently of the scheduled cloud-machine cleanup. GitHub schedules may run late, so exact compute-stop timing is not promised. Stopped machines retain storage and are not deleted automatically.
+
+Server-side controlled tests cover mismatch reports, timeout blocking, TLS rejection, capability protection and expiry. Actual client bootstrap and automatic Firefox-helper navigation still require testing on the user's device. DNS failure alone cannot redirect every application to a web page.
+
+The older `working/dns/README.md`, `launch.sh` and `make-public.sh` describe a manual fallback, not the normal chat-controlled lifecycle. Prefer the current controller guide above.
