@@ -2,7 +2,7 @@
   "name": "Black Cat cloud-controlled DNS lab",
   "image": "mcr.microsoft.com/devcontainers/python:3.13-bookworm",
   "features": {
-    "ghcr.io/devcontainers/features/github-cli:1.1.0": {},
+    "ghcr.io/devcontainers/features/github-cli:1.1.3": {},
     "ghcr.io/devcontainers/features/sshd:1": {"version": "latest"}
   },
   "forwardPorts": [8080],
