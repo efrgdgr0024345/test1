@@ -30,15 +30,21 @@ def https_url(url: str) -> str:
 
 
 def request(url: str, *, body: bytes | None = None,
-            kind: str = 'application/dns-message', maximum: int = MAX_BODY):
+            kind: str = 'application/dns-message', maximum: int = MAX_BODY,
+            accept: str | None = None):
     https_url(url)
+    # This option changes content negotiation only, not the required response
+    # MIME type, TLS checks, redirects, cookies or authentication. The default
+    # DoH request continues to advertise application/dns-message unchanged.
+    if accept not in (None, '*/*'):
+        raise ValueError('Unsupported Accept override')
     context = ssl.create_default_context()
     context.minimum_version = ssl.TLSVersion.TLSv1_2
-    # No environment proxies, cookies, redirect following, or unverified TLS.
     opener = urllib.request.build_opener(
         urllib.request.ProxyHandler({}),
         urllib.request.HTTPSHandler(context=context), NoRedirect())
-    headers = {'Accept': kind, 'User-Agent': 'BlackCat-DoH-Acceptance/0.2'}
+    headers = {'Accept': kind if accept is None else accept,
+               'User-Agent': 'BlackCat-DoH-Acceptance/0.3'}
     if body is not None:
         headers['Content-Type'] = kind
     req = urllib.request.Request(url, data=body, headers=headers,
@@ -54,7 +60,6 @@ def request(url: str, *, body: bytes | None = None,
                 raise ValueError('Response exceeds size limit')
             return result
     except urllib.error.HTTPError as exc:
-        # Do not print the capability URL carried in urllib exceptions.
         raise ValueError(f'HTTPS endpoint returned HTTP {exc.code}; redirects are not followed') from None
     except urllib.error.URLError as exc:
         raise ValueError(f'HTTPS connection failed: {type(exc.reason).__name__}') from None
