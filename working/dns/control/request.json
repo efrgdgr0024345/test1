@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "operation": "start",
-  "request_id": "525319773804259685ec0eedf6f44003",
+  "operation": "status",
+  "request_id": "1484fd93804ce43330d3e81da53f64eb",
   "lifetime_seconds": 3600,
-  "issued_at": 1791782696,
-  "valid_until": 1791786296,
+  "issued_at": 1791783118,
+  "valid_until": 1791786718,
   "codespace": "blackcatdns-v2-1791784779-5g6j759x5q9v27954",
-  "reply_public_key": "-----BEGIN PUBLIC KEY-----\nMIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEA5DXsxuGPNF86+DwLhjA4\ngDz4P8GBpSFzL9L0n1LFF30pwKPJClpt5Pw7wCvpIDC6WRBqVb2BnXNb+ZE97twO\nevlcA1dff1ihlY4mkvPle1abEDyWsZ6tA1yNoCNOj4NA6/m8XeZIk5QQnZJbRb5H\nopVDJ1oMWxptlMuYmhY+GMRuZv9+y6ZTz3LCsOJpGBT2vKA6MbTlMp7hDC5/17Vv\nNLTwOzlVo2TH2cRWofziMDQltUq5yulnXICGrgDy1Rsy4vlU5Bs7jPMIdDpPjncj\nVzk9qlxUylOOYo3dNXdEEU1LEv76NnYoVG5yzfCYNA4kCK/td9BIJy0xrsAof1FY\nE0bcL0iq94E0mdT5hGf8nNnSy3neN8a+HMaT8h8FZKJyZbbcS+3pq/590qmSEqyt\nAV5iiGQnDuCpkis7p0hgm0q2V/BQ+uKle4Ew5K2xak5qohr29SbAhg6P4UoeBFcU\nRnKycW79bLlXsAMiZVqEzIWxxBp4H3akEevmeZDOe1LtAgMBAAE=\n-----END PUBLIC KEY-----\n"
+  "reply_public_key": "-----BEGIN PUBLIC KEY-----\nMIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAvkmERYlS2aehY9kano+K\nOHEGgj00PfUAD/B5Ip/FJSLZSUUTSpS03BTchVdeFlBHORhAb0nV8HibUd11XTIQ\nz6Hwubxdi1lUwv2P9eM/3f8t2bLc+c9I1PGVMbIPpdsQILzOO66lqS/I34pXXOG6\nLlAR/GUfOGGZdFuIQ1Nm4bB08AeN2SQ/TpKg1CAbDNxaJIDeU5I28T9TK+/7un7r\nYSQWUFX4j3kOOzzxW8JuiH3LtThRKQAEmW7rYM5T9vkn9JISRQcM3SJdqj3wSjhS\nnkT2tiwh9HqF7wGNA+ypPJzpptFBUfY67hZkNIfa6nEkc/fGbT2g84hXZWefTj4y\ngBeO2bXCCSdUWfykP9IJvsT2ee2W1sW96q6YiUCK3TkFafnayjlVBxohhtZgZLhM\nogywE7ukfOzZL3oZJZvKlVI6MURz7J6+iKQPdp6knqRKPXUal7LC7/unZUjYJEHj\nXRUmzrB54wOYTsWRLS8fVLvyuuqvmT0+2f/WrrlJSFMlAgMBAAE=\n-----END PUBLIC KEY-----\n"
 }
