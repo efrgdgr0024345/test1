@@ -33,9 +33,15 @@ def redirect_is_https(original: str, location: str | None) -> bool:
         return False
     old = urlsplit(original)
     target = urlsplit(urljoin(original, location))
+    same_path = target.path == old.path
+    # Measured Codespaces HTTP 308 behavior strips one trailing slash from
+    # the session landing path. This is not a DNS route or origin change.
+    # Keep DoH paths, hostname, TLS port, credentials, query and fragment strict.
+    if re.fullmatch(r'/s/[A-Za-z0-9_-]+/', old.path):
+        same_path = same_path or target.path == old.path[:-1]
     return (target.scheme == 'https' and target.hostname == old.hostname
             and target.port in (None, 443) and target.username is None
-            and target.password is None and target.path == old.path
+            and target.password is None and same_path
             and target.query == old.query and not target.fragment)
 
 
@@ -64,7 +70,7 @@ def reject_http(url: str, body: bytes | None = None) -> str:
             raise ValueError('Plain HTTP did not refuse connection or strictly redirect to HTTPS')
         if not redirect_is_https(url, res.getheader('Location')):
             raise ValueError('Plain HTTP redirected to a different or insecure destination')
-        return 'redirects to the same HTTPS endpoint'
+        return 'redirects to the same HTTPS origin and route (dashboard trailing slash may be normalized)'
     except ConnectionRefusedError:
         return 'TCP port 80 refused the connection'
     finally:
