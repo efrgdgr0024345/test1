@@ -30,3 +30,11 @@ jobs:
         env:
           BLACKCAT_CODESPACES_PAT: ${{ secrets.BLACKCAT_CODESPACES_PAT }}
         run: python working/dns/control/diagnose.py
+      - name: Retain only encrypted result for the requesting chat
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: blackcat-encrypted-result
+          path: ${{ runner.temp }}/blackcat-encrypted/result.enc.json
+          if-no-files-found: ignore
+          retention-days: 1
