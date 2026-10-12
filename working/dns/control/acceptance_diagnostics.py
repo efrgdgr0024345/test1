@@ -14,6 +14,8 @@ from protocol import ControlError
 
 def acceptance(session, name):
     controller.check_session(session, name)
+    from edge_probe import probe
+    probe(session)
     sys.path.insert(0, str(controller.ROOT))
     import verify
     captured = io.StringIO()
