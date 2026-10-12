@@ -7,6 +7,7 @@ import http.client
 import json
 import os
 from pathlib import Path
+import re
 import tempfile
 from urllib.parse import urljoin, urlsplit
 
@@ -45,9 +46,6 @@ def reject_http(url: str, body: bytes | None = None) -> str:
     parts = u.path.split('/')
     if len(parts) < 4 or parts[1] != 's':
         raise ValueError('Unexpected session path for plaintext transport probe')
-    # Never disclose the real bearer/capability token over plaintext. Probe the
-    # same edge route with an intentionally invalid token. Application-level
-    # 404 is NOT accepted; the edge must redirect before the app sees it.
     parts[2] = 'invalid-transport-probe'
     u = u._replace(path='/'.join(parts))
     url = u.geturl()
@@ -73,6 +71,31 @@ def reject_http(url: str, body: bytes | None = None) -> str:
         conn.close()
 
 
+def dashboard_document(url: str) -> dict:
+    """Check both browser negotiation and the actual public application HTML.
+
+    The forwarding service may show a first-visit anti-phishing page when
+    Accept includes text/html. A non-browser Accept header is a documented
+    content-negotiation alternative, not authentication. The notice alone NEVER
+    passes: our actual page must still be obtained over verified TLS without
+    cookies, credentials or redirect following. DoH requests are unchanged.
+    Reference: https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/security
+    """
+    def ours(body):
+        return b'Black Cat DNS Consensus' in body and b'id="endpoint"' in body
+    html = request(url, kind='text/html')
+    if ours(html):
+        return {'browser_first_visit_notice': False, 'dashboard_verified': True}
+    title = re.search(br'<title[^>]*>(.*?)</title>', html, re.I | re.S)
+    title = re.sub(r'\s+', ' ', title.group(1).decode(errors='replace'))[:160] if title else 'untitled forwarding page'
+    actual = request(url, kind='text/html', accept='*/*')
+    if not ours(actual):
+        raise ValueError('Not our dashboard; a proxy, login or notice page cannot pass')
+    return {'browser_first_visit_notice': True, 'browser_first_page_title': title,
+            'dashboard_verified': True,
+            'dashboard_check': 'Actual HTML fetched with Accept */*; no cookies, authentication or redirects'}
+
+
 def main() -> None:
     session = json.loads(SESSION.read_text())
     session['deployment_verified'] = False
@@ -82,9 +105,7 @@ def main() -> None:
     if doh != dashboard.rstrip('/') + '/working/dns':
         raise ValueError('Dashboard and DoH URLs do not belong to the same session')
     print('Checking the actual public HTTPS dashboard (no login cookies)...', flush=True)
-    html = request(dashboard, kind='text/html')
-    if b'Black Cat DNS Consensus' not in html or b'id="endpoint"' not in html:
-        raise ValueError('Not our dashboard; a generic proxy or login page cannot pass')
+    dashboard_evidence = dashboard_document(dashboard)
     name = os.environ.get('VERIFY_NAME', 'unicast.uncensoreddns.org.')
     wire = dns.message.make_query(name, 'A').to_wire()
     encoded = base64.urlsafe_b64encode(wire).rstrip(b'=').decode('ascii')
@@ -109,15 +130,13 @@ def main() -> None:
             raise ValueError('Resolver evidence is incomplete or disagrees')
     print('Checking successful DNS-over-HTTPS GET and POST for IPv4 and IPv6...', flush=True)
     addresses = run(doh, name)
-    # The process can expire or be restarted during acceptance. Do not resurrect
-    # a deleted session or mark a replacement session as verified.
     current = json.loads(SESSION.read_text())
     if current['doh'] != doh:
         raise ValueError('The session changed during verification')
     current['deployment_verified'] = True
     current['verification'] = {'checked_at': dt.datetime.now(dt.timezone.utc).isoformat(),
                                'test_name': name, 'addresses': addresses,
-                               'http_checks': http_checks,
+                               'http_checks': http_checks, 'dashboard': dashboard_evidence,
                                'coverage': 'live transport and positive consensus; not a full security audit'}
     save(current)
     print('\nLIVE HTTPS ACCEPTANCE PASSED')
@@ -129,7 +148,6 @@ if __name__ == '__main__':
     try:
         main()
     except Exception as exc:
-        # Deliberately omit potentially capability-bearing exception messages.
         detail = str(exc) if isinstance(exc, ValueError) else type(exc).__name__
         raise SystemExit('Deployment acceptance FAILED: ' + detail
                          + '. Session remains unverified; no success URL is advertised.')
