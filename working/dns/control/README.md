@@ -2,139 +2,79 @@
 
 Project: https://github.com/efrgdgr0024345/test1/tree/main/working/dns
 
-This is the cloud-control layer, not a replacement DNS implementation. The
-existing resolver comparison, HTTPS verification, dashboard and Firefox helper
-are preserved. The DNS process runs in Codespaces. Commands run on GitHub-hosted
-Actions runners; nothing here requires a DNS process on the user's computer.
+## Verified deployment and current operating path
 
-## Current status and one-time authorisation
+The complete public HTTPS deployment passed on **12 October 2026 at 05:26:10 UTC**:
+https://github.com/efrgdgr0024345/test1/actions/runs/38207855261
 
-The control preflight on 8 October 2026 found that the Actions secret
-`BLACKCAT_CODESPACES_PAT` was missing:
-https://github.com/efrgdgr0024345/test1/actions/runs/37709946965
+Verified running code: `0690c33d8257bb2c1353b301b738e2c9da4122ca`.
+Regression suite and live upstream probe:
+https://github.com/efrgdgr0024345/test1/actions/runs/38207855216
 
-A missing credential is an authentication blocker, not a successful deployment.
-No live DNS endpoint has been confirmed by this controller at this point.
+The Actions secret is now present and works for starting/stopping, SSH and port publication. The original Codespace lacked sshd; it was preserved stopped. A fresh two-core Codespace with the committed SSH feature was created, and its real public DNS endpoint passed acceptance. This is evidence of a temporary session, not perpetual uptime. Obtain a current private session URL through a fresh chat status/start request.
 
-Create a short-lived fine-grained PAT owned by `efrgdgr0024345`, restricted to
-`test1`, then save it under repository Settings > Secrets and variables > Actions:
+The active workflow entry point is `acceptance_diagnostics.py`, which wraps the standard controller with redacted encrypted diagnostics. The one-time `recover_runtime.py` migration is retained as history and tests, not executed by normal start/status/stop/restart requests.
+
+## One-time authorisation for a new installation
+
+Save a short-lived GitHub token as the repository Actions secret `BLACKCAT_CODESPACES_PAT`:
 https://github.com/efrgdgr0024345/test1/settings/secrets/actions
 
-Use the name `BLACKCAT_CODESPACES_PAT`. Never paste it into chat, source, an issue,
-or the request file. Documented REST permissions are Codespaces read/write,
-Codespaces lifecycle admin read/write, and Codespaces metadata read (to select a
-small machine when creation is necessary). CLI SSH/port authorisation must also
-be tested with the credential. Do not grant unrelated permissions to mask an
-unexplained authentication failure.
+Never put the token in chat, source, an issue, a request file, or a public log. Start from repository-restricted access. Documented lifecycle permissions are Codespaces read/write and Codespaces lifecycle admin read/write. Codespaces metadata read is needed when selecting a new machine through the catalog endpoint. CLI SSH and port permissions must be verified with a real operation. Do not grant unrelated permissions to hide unexplained failures.
 
-The SSH feature has been added to the devcontainer. An older Codespace built
-before that change may lack an SSH server. The controller fails safely rather
-than deleting it, rebuilding over unknown local changes, or creating duplicates.
-Updating/rebuilding that old devcontainer can require a one-time GitHub UI action.
+The current installation already has a working token and runtime; do not repeat token setup without evidence of a new authorisation failure. Do not delete/rebuild an old machine over unknown work. The recovery procedure preserved the original and reused its authenticated two-core machine metadata after machine-catalog access was denied.
 
-## Chat control procedure
+## Chat command procedure
 
-The requesting chat runtime generates a fresh RSA-3072 reply key pair. Only the
-PUBLIC key enters `working/dns/control/request.json`. The private key stays in the
-requesting cloud runtime and must not be printed, uploaded or committed.
+The requesting chat runtime generates a fresh RSA-3072 reply key pair. Only the PUBLIC key enters `working/dns/control/request.json`; the private key remains in that runtime and must never be printed, uploaded or committed.
 
 A version-2 request contains:
 
-- operation: `start`, `status`, `stop`, or `restart`;
-- request_id: fresh 32-character lowercase hexadecimal ID;
-- lifetime_seconds: 3600, 7200 or 10800 (default choice is one hour);
-- issued_at and valid_until: UTC epoch seconds; command validity at most one hour;
-- reply_public_key: public RSA PEM, 3072 or 4096 bits;
-- optional codespace: exact existing machine name to disambiguate.
+- `operation`: start, status, stop or restart;
+- `request_id`: fresh 32-character lowercase hexadecimal ID;
+- `lifetime_seconds`: 3600, 7200 or 10800;
+- `issued_at` and `valid_until`: UTC epoch seconds, validity at most one hour;
+- `reply_public_key`: RSA public PEM, 3072 or 4096 bits;
+- optional `codespace`: exact target name to disambiguate.
 
-Updating only this file on `main` triggers **Black Cat DNS Chat Control**. Requests
-from forks, PR events, non-main refs, or actors other than the configured owner do
-not receive the credential through this workflow. Successful code tests alone
-never constitute a live deployment.
+Updating the request on main triggers **Black Cat DNS Chat Control**. The secret-bearing job is restricted to this repository, main, and the configured owner actor, not fork or PR code. Dependencies and regression tests run before the credential-bearing step.
 
-The controller discovers this repository's machine, or chooses an available
-2-core machine if none exists. It does not silently choose a larger machine.
-It waits for Available, connects over GitHub-authenticated SSH, and updates a
-clean worktree by fast-forward only to the workflow commit. It refuses dirty or
-divergent worktrees. It never runs git reset/clean, force checkout or Codespace
-DELETE operations. Stopped storage is preserved and can still incur charges.
+The controller verifies ownership, waits for Available, and connects using GitHub-authenticated SSH. It fast-forwards a clean workspace to the exact workflow commit and refuses dirty or divergent worktrees. It never uses git reset/clean, forced checkout, or Codespace deletion. The PAT is not installed in the DNS process.
 
-Repeated start returns an existing live session without changing its expiry.
-Replaying the same restart request does not extend the session. A consumed
-request cannot start a new session after its old session ended. A NEW restart
-request intentionally replaces the old DNS session and invalidates its URL.
-Status does not start a stopped machine. A legacy un-managed running service is
-not silently renewed by start; a deliberate restart migrates it.
+Repeated start returns the same live session without extending its expiry. A new restart intentionally invalidates the previous session. Replaying a consumed request cannot renew an ended session. Status does not start a stopped machine. Status on a live machine rechecks public HTTPS without changing its lease or running code. The workflow commit can therefore differ from the preserved running code commit during a status request.
 
-## Exact live URL and encrypted handback
+## Private URL handback
 
-After publication, the Actions runner performs the existing public HTTPS
-acceptance tests without GitHub browser cookies. GET and POST DNS messages must
-return positive IPv4/IPv6 answers. All configured providers must be represented
-and agree. Plain HTTP must refuse a connection or strictly redirect to the same
-HTTPS route; a timeout is not counted as proof. Failure rolls back a machine
-started or modified by this request and never advertises a working URL.
+After publication, the Actions runner tests the real public service without GitHub login cookies. Positive A and AAAA DoH GET/POST must succeed; all configured resolvers must be represented and agree. Plain HTTP must refuse or upgrade to the same HTTPS origin and DNS route, preserving the query. Only the measured dashboard landing-path trailing-slash normalization is allowed. Timeouts, SERVFAIL, NXDOMAIN on the positive test, empty answers and generic pages do not pass.
 
-The real dashboard URL, full `/working/dns` URL, absolute expiry, running commit
-and verification results are encrypted with a fresh AES-256-GCM key. RSA-OAEP with
-SHA-256 wraps that AES key. The request ID is bound into both operations. Public
-workflow logs receive only:
+The public forwarding service can display a first-visit **Codespaces Access Port** notice when Accept requests HTML. The verifier records that fact and separately fetches the real dashboard with Accept */*, still checking its exact expected markers and response MIME. The notice alone never qualifies. Standard DNS requests continue to use application/dns-message with no browser cookies, tunnel-authentication or notice-bypass headers.
 
-`BLACKCAT_ENCRYPTED_RESULT=<base64 envelope>`
+The session URL, dashboard, absolute expiry, running commit, verification and bounded diagnostics are encrypted with AES-256-GCM. RSA-OAEP-SHA256 wraps the random AES key. Both bind the request ID as authenticated context. Public output contains only `BLACKCAT_ENCRYPTED_RESULT=<base64 envelope>`. The workflow also retains `blackcat-encrypted-result`, an artifact containing only result.enc.json, for one day.
 
-The chat reads the log from the exact authenticated workflow run and commit,
-decrypts it with its private reply key using `protocol.unseal`, validates the
-request ID and returned service URL, and gives the user the actual address.
-Encryption does not by itself authenticate a publisher: checking the GitHub run,
-repository, commit, actor and request ID remains mandatory.
+The chat verifies the authenticated run's repository, actor, commit and request ID; downloads the artifact; checks its GitHub-reported SHA-256; decrypts using its private key and `protocol.unseal`; checks the result binding and session URL; and gives the user the actual URL. Encryption alone does not authenticate the publisher. The private key must never be sent to GitHub or the Codespace.
 
-If a chat runtime loses its private key, issue a new status request with a new key.
-Never try to recover an old reply by weakening encryption. The private key is not
-needed by the DNS server and is never installed in the Codespace.
+If the requesting runtime loses the private key, generate a new key and issue status. Do not weaken encryption or publish a live capability to recover an old response.
 
-## Session deadline and compute cleanup
+## Deadline and cleanup
 
-`managed_server.py` wraps the existing DNS Engine and loopback server. Its absolute
-lease is written to `.runtime/managed-lease.json`. Remaining time is recomputed
-from that deadline, never reset by a reboot. Ordinary Codespace boot no longer
-publishes a new default three-hour session; it waits for a chat command. An expired
-lease cannot restart DNS. The DNS child receives a minimal environment, without
-GitHub credentials or unrelated Codespaces secrets.
+`managed_server.py` starts the DNS core with an absolute lease stored privately in `.runtime/managed-lease.json`. Remaining time is recomputed from that deadline, not reset on reboot. The boot hook does not automatically publish a new three-hour session. The DNS child receives a minimal environment without controller credentials or unrelated Codespaces secrets.
 
-The machine display name records a nonsecret management tag and expiry. A separate
-**Black Cat DNS Expiry Cleanup** workflow checks every ten minutes, stops ONLY
-expired machines carrying that tag in this repository, and confirms Shutdown.
-GitHub schedules can be delayed, so this is not an exact compute-stop guarantee.
-The DNS process has its own hard lifetime independently of that cleanup schedule.
-A missing/revoked token or GitHub outage can prevent machine shutdown; failed stop
-confirmation is reported, never hidden. Stopped machines are not deleted.
+A nonsecret expiry tag in the machine display name is used by **Black Cat DNS Expiry Cleanup**, scheduled every ten minutes. It targets only expired managed instances in this repository and confirms Shutdown. GitHub schedules can be delayed and revoked credentials/outages can prevent compute shutdown; exact compute-stop timing is not guaranteed. DNS stops serving independently at its deadline. Failed shutdown confirmation is reported, not hidden. Stopped machines retain storage and are not deleted.
 
-## HTTPS boundaries and remaining client testing
+## Scope and remaining client validation
 
-Public TLS terminates at GitHub's Codespaces edge. Our backend is HTTP bound to
-127.0.0.1 only. This is not uninterrupted TLS into the Python process. Upstream
-resolver queries remain verified HTTPS/HTTP2 with pinned bootstrap IPs.
+DNS executes in GitHub Codespaces; commands execute in GitHub-hosted Actions. No server Python, VM or DNS process is required on the user's device. A browser still executes its normal web-interface JavaScript, and the optional Firefox helper executes locally if installed.
 
-Clients must support a custom DoH URL, prevent plaintext/system-DNS fallback,
-and be able to bootstrap the service hostname. Different legitimate CDN answers
-can trigger this deliberately strict policy. DNS failure by itself cannot open a
-page in every app; automatic evidence-page navigation still needs the Firefox
-helper or equivalent app integration. Actual device bootstrap and Firefox helper
-behavior require client-side validation; server tests do not prove them.
+Public TLS terminates at GitHub's forwarding edge; our backend is HTTP bound only to 127.0.0.1:8080. Upstream queries are verified HTTPS/HTTP2 with pinned bootstrap IPs. This is not uninterrupted TLS into Python, a worldwide probe network, or proof that matching answers are authentic. Legitimate CDN/geographic answers can differ and be blocked by the strict policy.
 
-## Tests
+Clients need custom DoH support, no silent system-DNS fallback, and a usable bootstrap path for the service hostname. DNS failure cannot itself navigate every app to a report page. The Firefox helper is implemented, but real device bootstrap and automatic browser navigation remain separate client-side tests.
 
-CI installs both DNS and controller requirements and runs all `test*.py` files.
-New controller tests cover command windows, replay, selection, workspace safety,
-reply encryption/tampering, fixed deadlines and cleanup targeting. Real local TLS
-integration tests use controlled upstream replies to exercise positive DNS,
-certificate rejection, HTTP rejection, disagreement reports, upstream timeout,
-capability access and expiry. These local TLS tests are not a claim that a public
-Codespace is deployed. Existing live upstream probes remain in CI.
+Regression tests cover control windows/replay, workspace safety, encryption/tampering, deadlines, targeted cleanup, controlled TLS positive/mismatch/timeout responses, invalid certificates, plaintext rejection, capability checks, encrypted diagnostics, dashboard negotiation, and precise HTTPS redirects. Controlled tests are distinct from the actual public deployment run linked above.
 
 Primary references:
 - https://docs.github.com/en/rest/codespaces/codespaces
 - https://cli.github.com/manual/gh_codespace_ssh
 - https://docs.github.com/en/codespaces/developing-in-a-codespace/forwarding-ports-in-your-codespace
+- https://learn.microsoft.com/en-us/azure/developer/dev-tunnels/security
 - https://cryptography.io/en/latest/hazmat/primitives/asymmetric/rsa/
 - https://cryptography.io/en/latest/hazmat/primitives/aead/
